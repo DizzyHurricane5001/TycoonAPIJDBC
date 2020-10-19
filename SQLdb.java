@@ -31,40 +31,41 @@ public class SQLdb {
 
 
     public void insertData(String ofType, int serverNumber,  String insertData) throws SQLException {
-        parser = new JsonParser();
-        jsonTree = parser.parse(insertData);
-        jsonObject = jsonTree.getAsJsonObject();
+        if (insertData != null) {
+            parser = new JsonParser();
+            jsonTree = parser.parse(insertData);
+            jsonObject = jsonTree.getAsJsonObject();
 
 
-        switch(ofType) {
-            case "serverData":
-                resetServerData();
-                rootObject = jsonObject.get("server");
-                JsonObject treeObject = rootObject.getAsJsonObject();
-                //String dxp_status = treeObject.get("dxp").toString();
+            switch (ofType) {
+                case "serverData":
+                    rootObject = jsonObject.get("server");
+                    JsonObject treeObject = rootObject.getAsJsonObject();
+                    //String dxp_status = treeObject.get("dxp").toString();
 
-                //JsonArray jarray = jsonObject.getAsJsonArray("server");
-                String uptime = treeObject.get("uptime").toString();
-                String dxp_status = treeObject.get("dxp").toString();
-                String serverRegion = treeObject.get("region").toString();
+                    //JsonArray jarray = jsonObject.getAsJsonArray("server");
+                    String uptime = treeObject.get("uptime").toString();
+                    String dxp_status = treeObject.get("dxp").toString();
+                    String serverRegion = treeObject.get("region").toString();
 
 
-            preparedStatement = connect
-                    .prepareStatement("insert into serverdata values (default, ?, ?, ?, ?,default,?)");
-            preparedStatement.setString(1, serverRegion + "" + serverNumber); // server id
-            preparedStatement.setString(2, dxp_status); // dxp status
-            preparedStatement.setString(3, uptime); // uptime
-            preparedStatement.setInt(4, 1); //dxp duration is status = true
-                preparedStatement.setInt(5, 0); //dxp expired true false
-            //    preparedStatement.setTimestamp(5, );
-                preparedStatement.executeUpdate(); //insert
-            break;
+                    preparedStatement = connect
+                            .prepareStatement("insert into serverdata values (default, ?, ?, ?, ?,default,?)");
+                    preparedStatement.setString(1, serverRegion + "" + serverNumber); // server id
+                    preparedStatement.setString(2, dxp_status); // dxp status
+                    preparedStatement.setString(3, uptime); // uptime
+                    preparedStatement.setInt(4, 1); //dxp duration is status = true
+                    preparedStatement.setInt(5, 0); //dxp expired true false
+                    //    preparedStatement.setTimestamp(5, );
+                    preparedStatement.executeUpdate(); //insert
+                    break;
+            }
         }
     }
     public void resetServerData() throws SQLException {
         statement = connect.createStatement();
-        String query = "DROP TABLE serverdata";
-        PreparedStatement s = connect.prepareStatement(query);
+        String query = "DELETE from serverdata";
+        statement.executeUpdate(query);
 
     }
 
