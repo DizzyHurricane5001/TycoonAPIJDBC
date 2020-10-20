@@ -23,7 +23,6 @@ public class Tycoon {
 
     public static String tycoonAPICall(int num, String directory) throws IOException {
         try {
-            String auth = TycoonAPIKey;
             url = new URL(serverList[num] + directory);
             CloseableHttpClient httpClient = HttpClients.createDefault();
             HttpGet request = new HttpGet(serverList[num] + directory);
