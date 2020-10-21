@@ -12,6 +12,7 @@ Modular front end features:
 - Bootstrap PHP front end for displaying flightdata (playerid, flight model, destination, arrival)
 
 Work in Progress for ALPHA 0.2:
+- Add proper exception handling
 - Extensive per server player data
 - Connect to specified server on serverdata table (bootstrap FE)
 - <del>rewrite flightData case with GSON [DONE(21/10/2020)]
