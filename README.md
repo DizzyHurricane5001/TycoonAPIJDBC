@@ -4,7 +4,7 @@
 WIP Java TT API program that interfaces with MYSQL via JDBC driver for easy app integration. Useful for easily managing data for web sites, discord bots, and more. 
 
 Current features:
-- Full serverdata logging 
+- Full serverdata logging (including weather data for BETA server)
 - Full flight logging
 
 Modular front end features:
