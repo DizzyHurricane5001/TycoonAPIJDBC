@@ -11,9 +11,10 @@ Modular front end features:
 - Bootstrap PHP front end for displaying serverdata table (including dxp status/uptime/etc)
 - Bootstrap PHP front end for displaying flightdata (playerid, flight model, destination, arrival)
 
-Work in Progress:
+Work in Progress for ALPHA 0.2:
 - Extensive per server player data
 - Connect to specified server on serverdata table (bootstrap FE)
+- rewrite flightData case with GSON
 - Flight data tab [DONE (21/10/2020)]
 - Weather API access announced for BETA server WIP for full release [DONE(21/10/2020)]
 
