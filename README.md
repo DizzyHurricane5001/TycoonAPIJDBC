@@ -14,7 +14,7 @@ Modular front end features:
 Work in Progress for ALPHA 0.2:
 - Extensive per server player data
 - Connect to specified server on serverdata table (bootstrap FE)
-- rewrite flightData case with GSON
+- rewrite flightData case with GSON [DONE(21/10/2020)]
 - Flight data tab [DONE (21/10/2020)]
 - Weather API access announced for BETA server WIP for full release [DONE(21/10/2020)]
 
