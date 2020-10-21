@@ -30,7 +30,7 @@ public class SQLdb {
     }
 
 
-     public void insertData(String ofType, int serverNumber,  String insertData) throws SQLException {
+    public void insertData(String ofType, int serverNumber,  String insertData) throws SQLException {
 
             switch (ofType) {
                 case "serverData":
@@ -50,72 +50,76 @@ public class SQLdb {
 
 
                         preparedStatement = connect
-                                .prepareStatement("insert into serverdata values (default, ?, ?, ?, ?,default,?)");
-                        preparedStatement.setString(1, serverRegion + "" + serverNumber); // server id
+                                .prepareStatement("insert into serverdata values (default, ?, ?, ?, ?, ? , ?)");
+                        preparedStatement.setString(1,  ""+ serverNumber); // server id
                         preparedStatement.setString(2, dxp_status); // dxp status
                         preparedStatement.setString(3, uptime); // uptime
                         preparedStatement.setInt(4, 1); //dxp duration is status = true
-                        preparedStatement.setInt(5, 0); //dxp expired true false
-                        //    preparedStatement.setTimestamp(5, );
-                        preparedStatement.executeUpdate(); //insert
+
+                        // will remove
+                        preparedStatement.setString(5,  "0"); // server id
+                        preparedStatement.setString(6,  "0"); // server id
+                        
+                        preparedStatement.executeUpdate();
                     }
                     break;
                 case "flightData":
-                    if (insertData != null) {
-                        Pattern p = Pattern.compile("[0-9]+(?=])");//. represents single character
-                        Matcher m;
-                        String airRoutes[] = insertData.split("\"");
-                        String allowedAircraft[] = {"Nimbus", "Vestra", "Shamal", "Luxor", "Boeing 737-200", "Dash-8" , "Velum", "Miljet", "Boeing",
-                        "Airbus"};
-                        String allowedDestinations[] = {"Chianski", "LSIA", "Pacific", "SSIA", "Mount", "Post", "POST", "Paleto", "Zancudo", "Chumash", "Aircraft", "Sandy",
-                                "Francis", "Mckenzie"};
-                        int newLength = 0;
-                        String formattedArray[][] = new String[100][3];
-                        for (int x = 0; x < airRoutes.length; x++) { //m = p.matcher(airRoutes[x]);
-                            m = p.matcher(airRoutes[x]);
-                            if (m.find()) {
-                             formattedArray[newLength][2] = m.group(0);
-                                System.out.println("Java regex response: " + formattedArray[newLength][2]);
-                            }
-
-                            for (int y = 0; y < allowedAircraft.length; y++) {
-                                if (airRoutes[x].contains(allowedAircraft[y])) {
-                                    formattedArray[newLength][0] = airRoutes[x];
-                                    //System.out.println(formattedArray[newLength][0]);
-                                    break;
+                    if (insertData != null && insertData.contains("name")) {
+                        Pattern jsonWorkAround[] = {Pattern.compile("[0-9]+(?=\":)")/* first numid */ , Pattern.compile("[a-zA-Z ]+(?=\\\"\\,\\{)"),
+                        Pattern.compile("[a-zA-Z ]+(?=\",\")")}; // mid, model, dest
+                        Pattern pattern;
+                        Matcher matcher;
+                        ArrayList Modellist = new ArrayList();
+                        ArrayList Midlist = new ArrayList();
+                        ArrayList Destlist = new ArrayList();
+                        for (int index = 0; index < jsonWorkAround.length; index++) {
+                            pattern = jsonWorkAround[index];
+                            matcher = pattern.matcher(insertData);
+                            while (matcher.find()) {
+                                switch(index) {
+                                    case 0:
+                                        Midlist.add(matcher.group());
+                                        break;
+                                    case 1:
+                                        Modellist.add(matcher.group());
+                                        System.out.println(Modellist.get(0));
+                                        break;
+                                    case 2:
+                                        Destlist.add(matcher.group());
+                                        break;
                                 }
                             }
-
-                            for (int z = 0; z < allowedDestinations.length; z++) {
-                                if (airRoutes[x].contains(allowedDestinations[z])) {
-                                    formattedArray[newLength][1] = airRoutes[x];
-                                    //System.out.println(formattedArray[newLength][1]);
-                                    newLength += 1;
-                                    break;
-                                }
-                            }
-
-
-                        } // new array formatted
-
-                        for (int q = 0; q < formattedArray.length; q++) {
-                            if (formattedArray[q][0] != null && formattedArray[q][1] != null && formattedArray[q][2] != null) {
-                                System.out.println("Model:" + formattedArray[q][0] + " To: " + formattedArray[q][1] + " Player ID: " + formattedArray[q][2]);
-                                preparedStatement = connect
-                                        .prepareStatement("insert into flightdata values (default, ?, ?, ?, ?)");
-                                preparedStatement.setString(1, formattedArray[q][0]);
-                                preparedStatement.setString(2, formattedArray[q][1]);
-                                preparedStatement.setString(3, "PlaceHolder");
-                                preparedStatement.setString(4, formattedArray[q][2]);
-                                preparedStatement.executeUpdate();
-                            } else {
-                               // System.out.println("Something was null with DB input");
-                            }
-
                         }
-
+                        for (int arrayListIndex = 0; arrayListIndex < Midlist.size(); arrayListIndex ++) {
+                            preparedStatement = connect
+                                    .prepareStatement("insert into flightdata values (default, ?, ?, ?, ?)");
+                            preparedStatement.setString(1, Modellist.get(arrayListIndex).toString());
+                            preparedStatement.setString(2, Destlist.get(arrayListIndex).toString());
+                            preparedStatement.setString(3, " ");
+                            preparedStatement.setString(4, Midlist.get(arrayListIndex).toString());
+                            preparedStatement.executeUpdate();
+                        }
+                     }
+                    break;
+                case "weatherData":
+                    if (insertData != null) {
+                        if (insertData.contains("weather")) {
+                            Gson gson = new Gson();
+                            jsonObject = gson.fromJson(insertData, JsonObject.class);
+                            // System.out.println(jsonObject.get("current_weather"));
+                            String sqlStatement =
+                                    "update serverdata " +
+                                            "set currentWeather = ?, " +
+                                            "weatherDuration = ?" +
+                                            "where serverid = ?";
+                            preparedStatement = connect
+                                    .prepareStatement(sqlStatement);
+                            preparedStatement.setString(1, jsonObject.get("current_weather").toString());
+                            preparedStatement.setString(2, jsonObject.get("time_remaining").toString());
+                            preparedStatement.setString(3, "" + serverNumber);
+                            preparedStatement.executeUpdate();
+                        }
                     }
-
                     break;
             }
         }
