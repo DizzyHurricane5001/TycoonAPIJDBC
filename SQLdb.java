@@ -38,12 +38,8 @@ public class SQLdb {
                         parser = new JsonParser();
                         jsonTree = parser.parse(insertData);
                         jsonObject = jsonTree.getAsJsonObject();
-
                         rootObject = jsonObject.get("server");
                         JsonObject treeObject = rootObject.getAsJsonObject();
-                        //String dxp_status = treeObject.get("dxp").toString();
-
-                        //JsonArray jarray = jsonObject.getAsJsonArray("server");
                         String uptime = treeObject.get("uptime").toString();
                         String dxp_status = treeObject.get("dxp").toString();
                         String serverRegion = treeObject.get("region").toString();
@@ -57,8 +53,8 @@ public class SQLdb {
                         preparedStatement.setInt(4, 1); //dxp duration is status = true
 
                         // will remove
-                        preparedStatement.setString(5,  "0"); // server id
-                        preparedStatement.setString(6,  "0"); // server id
+                        preparedStatement.setString(5,  "0"); // weather beta holder (current_weather)
+                        preparedStatement.setString(6,  "0"); // weather beta holder (weather_duration)
                         
                         preparedStatement.executeUpdate();
                     }
