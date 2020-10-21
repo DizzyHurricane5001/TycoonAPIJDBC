@@ -15,7 +15,7 @@ Work in Progress for ALPHA 0.2:
 - Add proper exception handling
 - Extensive per server player data
 - Connect to specified server on serverdata table (bootstrap FE)
-- <del>rewrite flightData case with GSON [DONE(21/10/2020)]
+- <del>rewrite flightData case with regex [DONE(21/10/2020)]
 - <del>Flight data tab [DONE (21/10/2020)]
 - <del>Weather API access announced for BETA server WIP for full release [DONE(21/10/2020)]
 
