@@ -15,7 +15,7 @@ Work in Progress:
 - Extensive per server player data
 - Connect to specified server on serverdata table (bootstrap FE)
 - Flight data tab [DONE (21/10/2020)]
-- Weather API access announced for BETA server WIP for full release
+- Weather API access announced for BETA server WIP for full release [DONE(21/10/2020)]
 
 Project by Dizzy Hurricane (Tom B in-game). Feel free to contact me on Discord if you have any questions.
 
